@@ -1454,7 +1454,7 @@ if ('serviceWorker' in navigator) {
         const locale = window.currentLang === 'ar' ? 'ar-EG' : 'en-US';
         if(document.getElementById("printOutDate")) document.getElementById("printOutDate").innerText = new Date().toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 
-        if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) { window.open('https://calc.solartoolspro.com/', '_system'); } else { window.print(); }
+        const iframe = document.createElement('iframe'); iframe.style.display = 'none'; document.body.appendChild(iframe); iframe.contentDocument.write(document.documentElement.outerHTML); iframe.contentDocument.close(); setTimeout(() => { iframe.contentWindow.print(); document.body.removeChild(iframe); }, 500);
     };
 
     window.updateVisitorCount = async function() {
