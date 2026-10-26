@@ -33,8 +33,8 @@ jobs:
             npx cap sync android
           fi
 
-      - name: Generate App Icons Automatically
-        run: npx @capacitor/assets generate --android
+      - name: Generate App Icon Automatically
+        run: npx @capacitor/assets generate --android --iconPath assets/icon.png
 
       - name: Decode Keystore
         env:
