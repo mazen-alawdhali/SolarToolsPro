@@ -49,7 +49,7 @@ jobs:
       - name: Update Version Code in Gradle
         run: |
           BUILD_NUM=13
-          VERSION_NAME="1.3"
+          VERSION_NAME="13"
           sed -i "s/versionCode [0-9]*/versionCode $BUILD_NUM/g" android/app/build.gradle
           sed -i "s/versionName \"[^\"]*\"/versionName \"$VERSION_NAME\"/g" android/app/build.gradle
 
