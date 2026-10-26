@@ -1454,7 +1454,7 @@ if ('serviceWorker' in navigator) {
         const locale = window.currentLang === 'ar' ? 'ar-EG' : 'en-US';
         if(document.getElementById("printOutDate")) document.getElementById("printOutDate").innerText = new Date().toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 
-        window.print();
+        if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) { window.open('https://calc.solartoolspro.com/', '_blank'); } else { window.print(); }
     };
 
     window.updateVisitorCount = async function() {
@@ -2626,7 +2626,7 @@ if ('serviceWorker' in navigator) {
         applyLanguage(); 
     };
     
-    window.onload = window.startApp; let globalUpdateUrl = "https://play.google.com/store/apps/details?id=com.mazen.Smart.Solar.Energy.Calc"; let currentRemoteVersion = 13; async function checkAppVersion() { try { const appInfo = await window.Capacitor.Plugins.App.getInfo(); const currentVersion = parseInt(appInfo.build, 10); const response = await fetch('https://calc.solartoolspro.com/version.json?' + new Date().getTime()); if (!response.ok) return; const data = await response.json(); if (data.versionCode && data.versionCode > currentVersion) { currentRemoteVersion = data.versionCode; if (data.updateUrl) globalUpdateUrl = data.updateUrl; document.getElementById('updateModal').classList.add('active'); } } catch (e) { console.log("Version check skipped."); } } window.closeUpdateModal = function() { document.getElementById('updateModal').classList.remove('active'); }; window.openUpdateStore = function() { document.getElementById('updateModal').classList.remove('active'); window.open(globalUpdateUrl, '_blank'); };
+    window.onload = window.startApp; let globalUpdateUrl = "https://play.google.com/store/apps/details?id=com.mazen.Smart.Solar.Energy.Calc"; let currentRemoteVersion = 13; async function checkAppVersion() { try { const appInfo = await window.Capacitor.Plugins.App.getInfo(); const currentVersion = parseInt(appInfo.build, 10); const response = await fetch('https://mazen-alawdhali.vercel.app/version.json?' + new Date().getTime()); if (!response.ok) return; const data = await response.json(); if (data.versionCode && data.versionCode > currentVersion) { currentRemoteVersion = data.versionCode; if (data.updateUrl) globalUpdateUrl = data.updateUrl; document.getElementById('updateModal').classList.add('active'); } } catch (e) { console.log("Version check skipped."); } } window.closeUpdateModal = function() { document.getElementById('updateModal').classList.remove('active'); }; window.openUpdateStore = function() { document.getElementById('updateModal').classList.remove('active'); window.open(globalUpdateUrl, '_blank'); };
 }();
 </script>
   <script>
