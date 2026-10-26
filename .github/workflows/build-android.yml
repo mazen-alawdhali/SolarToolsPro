@@ -36,11 +36,12 @@ jobs:
       - name: Generate App Icon Automatically
         run: npx @capacitor/assets generate --android
 
-      - name: Decode Keystore in Root Directory
+      - name: Decode Keystore Directly
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > signing.keystore
+          mkdir -p android/app
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/signing.keystore
 
       - name: Build Signed AAB and APK
         env:
@@ -50,7 +51,7 @@ jobs:
         run: |
           cd android
           ./gradlew bundleRelease assembleRelease \
-            -Pandroid.injected.signing.store.file=../signing.keystore \
+            -Pandroid.injected.signing.store.file=app/signing.keystore \
             -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
             -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
             -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
