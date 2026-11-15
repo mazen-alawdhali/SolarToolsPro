@@ -1,7 +1,7 @@
 {
-  "name": "smart-solar-energy-calc",
+  "name": "solar-panels-calc",
   "version": "1.0.0",
-  "description": "حاسبة الطاقة الشمسية الذكية - تطبيق محلي",
+  "description": "حاسبة الألواح الشمسية - تطبيق محلي",
   "scripts": {
     "build": "echo 'No build step required for static files'"
   },
