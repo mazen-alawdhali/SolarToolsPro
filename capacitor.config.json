@@ -1,6 +1,6 @@
 {
-  "appId": "com.mazen.Smart.Solar.Energy.Calc",
-  "appName": "حاسبة الطاقة الشمسية الذكية",
+  "appId": "com.mazen.Solar.Panels.Calc",
+  "appName": "حاسبة الألواح الشمسية",
   "webDir": "www",
   "bundledWebRuntime": false
 }
