@@ -6,7 +6,7 @@
     "build": "echo 'No build step required for static files'"
   },
   "dependencies": {
-    "@bcyesil/capacitor-plugin-printer": "^6.0.0",
+    "@bcyesil/capacitor-plugin-printer": "latest",
     "@capacitor/android": "^6.0.0",
     "@capacitor/app": "^6.0.0",
     "@capacitor/core": "^6.0.0",
