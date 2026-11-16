@@ -25,14 +25,14 @@
         "name": "م. مازن العوذلي"
       }
     }
-    -->
+    
     <title>حاسبة الطاقة الشمسية</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="shortcut icon" href="/favicon.ico">
-    -->
+    
     <meta name="theme-color" content="#0f172a">
 
     <style id="dynamic-print-style"></style>
@@ -245,8 +245,8 @@
         .social-btn svg { width: 18px; height: 18px; fill: currentColor; } .privacy-icon-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: #64748b; margin-top: 14px; transition: color 0.2s, transform 0.2s; text-decoration: none; font-size: 12px; font-weight: 600; } .privacy-icon-btn:hover { color: #10b981; transform: scale(1.05); } .privacy-icon-btn svg { width: 15px; height: 15px; fill: currentColor; }
 
         .gold-badge-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 8px 0 12px 0; font-family: inherit; }
-        .shield-wrapper { position: relative; width: 50px; height: 58px; display: flex; align-items: center; justify-content: center; }
-        .shield-icon { width: 100%; height: 100%; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.35)); }
+        .shield-wrapper { position: relative; width: 50px; height: 58px; min-width: 50px; min-height: 58px; flex-shrink: 0; aspect-ratio: 120 / 145; display: flex; align-items: center; justify-content: center; }
+        .shield-icon { width: 50px; height: 58px; max-width: none; flex-shrink: 0; display: block; filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.35)); }
         .gold-edition-label { margin-top: 4px; font-size: 12px; font-weight: bold; color: #FFE259; background: linear-gradient(135deg, #FFE259 0%, #FFA751 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 8px rgba(255, 215, 0, 0.2); }
         
         .visitor-counter-box { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(16, 185, 129, 0.25); padding: 8px 16px; border-radius: 14px; backdrop-filter: blur(6px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 13px; color: #94a3b8; font-weight: 600; margin-top: 15px; }
@@ -1454,7 +1454,7 @@ if ('serviceWorker' in navigator) {
         const locale = window.currentLang === 'ar' ? 'ar-EG' : 'en-US';
         if(document.getElementById("printOutDate")) document.getElementById("printOutDate").innerText = new Date().toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Printer) { window.Capacitor.Plugins.Printer.print({ name: (cliVal || defaultCli) + '_Solar_Report' }); } else { window.print(); }
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem && window.Capacitor.Plugins.Share) { (async function() { try { const clone = document.documentElement.cloneNode(true); const origInputs = document.querySelectorAll('input'); const clonedInputs = clone.querySelectorAll('input'); origInputs.forEach((inp, idx) => { if (clonedInputs[idx]) clonedInputs[idx].setAttribute('value', inp.value || ''); }); clone.querySelectorAll('script, #splash-screen, #updateModal, #customModal, #smartScrollBtn').forEach(el => el.remove()); const reportStyle = document.createElement('style'); reportStyle.textContent = 'body, html { background: #fff !important; color: #000 !important; padding: 12px !important; } .container { max-width: 100% !important; background: #fff !important; border: none !important; box-shadow: none !important; color: #000 !important; } .print-only-header { display: block !important; border-bottom: 2px solid #059669; padding-bottom: 10px; margin-bottom: 14px; } .print-title { color: #059669 !important; text-align: center; font-size: 20px !important; margin: 0 0 8px 0 !important; } .print-info-row { display: flex; justify-content: space-between; font-size: 13px !important; font-weight: bold; color: #000 !important; margin-bottom: 6px; } .print-client-box { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; padding: 8px 10px !important; border-radius: 8px; font-size: 14px !important; color: #000 !important; } .print-client-name { color: #2563eb !important; font-weight: bold; } .header, .pdf-accordion, .playstore-card, .service-apps-card, button, .btn, .social-links, .solar-footer, .lang-toggle, .top-links, .gold-badge-container, .visitor-counter-box, #appliancesList, .device-counter { display: none !important; } #printAppliancesTableWrapper { display: block !important; margin-top: 10px; } .section-title, .title-text { color: #059669 !important; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; } input, .custom-select-display { background: #f1f5f9 !important; border: 1px solid #94a3b8 !important; color: #000 !important; } .input-group label { color: #000 !important; } .hybrid-accordion:not(.has-data), .cables-accordion:not(.has-data), .enterprise-accordion:not(.has-data) { display: none !important; } .hybrid-accordion-body, .cables-accordion-body, .enterprise-accordion-body { max-height: none !important; opacity: 1 !important; padding: 10px !important; } .hybrid-accordion-header, .cables-accordion-header, .enterprise-accordion-header { background: #e2e8f0 !important; color: #000 !important; } .results-container { background: #fff !important; border: 2px solid #059669 !important; } .result-row, .enterprise-detail-block, .cables-results-card .result-row { background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000 !important; } .result-label, .result-value, .enterprise-detail-label, .enterprise-detail-val, .cables-card-title, .cable-disclaimer { color: #000 !important; } .stdSize { background: transparent !important; color: #000 !important; border: 1px solid #000 !important; } #disclaimerCard { display: block !important; background: #fffbe2 !important; color: #000 !important; } .print-footer-content { display: block !important; text-align: center; margin-top: 16px; border-top: 1px solid #000; padding-top: 8px; color: #000 !important; font-weight: bold; }'; clone.querySelector('head').appendChild(reportStyle); const htmlContent = '<!DOCTYPE html>' + clone.outerHTML; const safeName = ((cliVal || defaultCli).replace(/[^\w\u0600-\u06FF-]+/g, '_')) + '_Solar_Report.html'; const fileRes = await window.Capacitor.Plugins.Filesystem.writeFile({ path: safeName, data: htmlContent, directory: 'CACHE', encoding: 'utf8' }); await window.Capacitor.Plugins.Share.share({ title: (cliVal || defaultCli), url: fileRes.uri }); } catch (err) { window.print(); } })(); } else { window.print(); }
     };
 
     window.updateVisitorCount = async function() {
@@ -1613,7 +1613,7 @@ if ('serviceWorker' in navigator) {
         
         updateAccordionStates();
         applyLanguage();
-        setTimeout(() => { window.updateVisitorCount(); }, 400); setTimeout(() => { checkAppVersion(); }, 800);
+        setTimeout(() => { window.updateVisitorCount(); }, 400); setTimeout(() => { checkAppVersion(); }, 800); if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) { window.Capacitor.Plugins.App.addListener('backButton', function() { const cm = document.getElementById('customModal'); const um = document.getElementById('updateModal'); const openDrop = document.querySelector('.custom-select-options.show'); const openTip = document.querySelector('.hint-tooltip.show'); if (cm && cm.classList.contains('active')) { window.closeModal(); } else if (um && um.classList.contains('active')) { window.closeUpdateModal(); } else if (openDrop || openTip) { document.querySelectorAll('.custom-select-options.show, .hint-tooltip.show').forEach(el => el.classList.remove('show')); } else { window.Capacitor.Plugins.App.exitApp(); } }); }
     };
 
     window.renderAppliances = function() {
