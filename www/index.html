@@ -1619,7 +1619,7 @@ if ('serviceWorker' in navigator) {
               await window.Capacitor.Plugins.Share.share({ title: (cliVal || defaultCli), url: fileRes.uri });
             }
           })();
-        } else { window.print(); }
+        } else { window.print(); }     };
 
     window.updateVisitorCount = async function() {
         const counterElement = document.getElementById('visitor-count');
