@@ -1454,8 +1454,172 @@ if ('serviceWorker' in navigator) {
         const locale = window.currentLang === 'ar' ? 'ar-EG' : 'en-US';
         if(document.getElementById("printOutDate")) document.getElementById("printOutDate").innerText = new Date().toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem && window.Capacitor.Plugins.Share) { (async function() { try { const clone = document.documentElement.cloneNode(true); const origInputs = document.querySelectorAll('input'); const clonedInputs = clone.querySelectorAll('input'); origInputs.forEach((inp, idx) => { if (clonedInputs[idx]) clonedInputs[idx].setAttribute('value', inp.value || ''); }); clone.querySelectorAll('script, #splash-screen, #updateModal, #customModal, #smartScrollBtn').forEach(el => el.remove()); const reportStyle = document.createElement('style'); reportStyle.textContent = 'body, html { background: #fff !important; color: #000 !important; padding: 12px !important; } .container { max-width: 100% !important; background: #fff !important; border: none !important; box-shadow: none !important; color: #000 !important; } .print-only-header { display: block !important; border-bottom: 2px solid #059669; padding-bottom: 10px; margin-bottom: 14px; } .print-title { color: #059669 !important; text-align: center; font-size: 20px !important; margin: 0 0 8px 0 !important; } .print-info-row { display: flex; justify-content: space-between; font-size: 13px !important; font-weight: bold; color: #000 !important; margin-bottom: 6px; } .print-client-box { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; padding: 8px 10px !important; border-radius: 8px; font-size: 14px !important; color: #000 !important; } .print-client-name { color: #2563eb !important; font-weight: bold; } .header, .pdf-accordion, .playstore-card, .service-apps-card, button, .btn, .social-links, .solar-footer, .lang-toggle, .top-links, .gold-badge-container, .visitor-counter-box, #appliancesList, .device-counter { display: none !important; } #printAppliancesTableWrapper { display: block !important; margin-top: 10px; } .section-title, .title-text { color: #059669 !important; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; } input, .custom-select-display { background: #f1f5f9 !important; border: 1px solid #94a3b8 !important; color: #000 !important; } .input-group label { color: #000 !important; } .hybrid-accordion:not(.has-data), .cables-accordion:not(.has-data), .enterprise-accordion:not(.has-data) { display: none !important; } .hybrid-accordion-body, .cables-accordion-body, .enterprise-accordion-body { max-height: none !important; opacity: 1 !important; padding: 10px !important; } .hybrid-accordion-header, .cables-accordion-header, .enterprise-accordion-header { background: #e2e8f0 !important; color: #000 !important; } .results-container { background: #fff !important; border: 2px solid #059669 !important; } .result-row, .enterprise-detail-block, .cables-results-card .result-row { background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000 !important; } .result-label, .result-value, .enterprise-detail-label, .enterprise-detail-val, .cables-card-title, .cable-disclaimer { color: #000 !important; } .stdSize { background: transparent !important; color: #000 !important; border: 1px solid #000 !important; } #disclaimerCard { display: block !important; background: #fffbe2 !important; color: #000 !important; } .print-footer-content { display: block !important; text-align: center; margin-top: 16px; border-top: 1px solid #000; padding-top: 8px; color: #000 !important; font-weight: bold; }'; clone.querySelector('head').appendChild(reportStyle); const htmlContent = '<!DOCTYPE html>' + clone.outerHTML; const safeName = ((cliVal || defaultCli).replace(/[^\w\u0600-\u06FF-]+/g, '_')) + '_Solar_Report.html'; const fileRes = await window.Capacitor.Plugins.Filesystem.writeFile({ path: safeName, data: htmlContent, directory: 'CACHE', encoding: 'utf8' }); await window.Capacitor.Plugins.Share.share({ title: (cliVal || defaultCli), url: fileRes.uri }); } catch (err) { window.print(); } })(); } else { window.print(); }
-    };
+         if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem && window.Capacitor.Plugins.Share) {
+          (async function() {
+            const NL = String.fromCharCode(10);
+            const baseName = (cliVal || defaultCli).trim().split(' ').join('_').replace(/[^a-zA-Z0-9_\u0600-\u06FF-]/g, '') || 'Solar';
+            const reportCss = `
+              body, html, #pdfMeasureHost { background: #fff !important; color: #000 !important; padding: 14px !important; margin: 0 !important; width: 794px !important; box-sizing: border-box !important; }
+              .main-table, .container { width: 100% !important; max-width: 100% !important; background: #fff !important; border: none !important; box-shadow: none !important; color: #000 !important; padding: 0 !important; }
+              .print-only-header { display: block !important; border-bottom: 2px solid #059669 !important; padding-bottom: 10px !important; margin-bottom: 14px !important; }
+              .print-title { color: #059669 !important; text-align: center !important; font-size: 20px !important; margin: 0 0 8px 0 !important; }
+              .print-info-row { display: flex !important; justify-content: space-between !important; font-size: 13px !important; font-weight: bold !important; color: #000 !important; margin-bottom: 6px !important; }
+              .print-client-box { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; padding: 8px 10px !important; border-radius: 8px !important; font-size: 14px !important; color: #000 !important; }
+              .print-client-name { color: #1d4ed8 !important; font-weight: bold !important; }
+              .header, .pdf-accordion, .playstore-card, .service-apps-card, button, .btn, .social-links, .solar-footer, .lang-toggle, .top-links, .gold-badge-container, .visitor-counter-box, #appliancesList, .device-counter { display: none !important; }
+              #printAppliancesTableWrapper { display: block !important; margin-top: 10px !important; }
+              .section { padding: 10px 0 !important; border-bottom: 1px solid #e2e8f0 !important; }
+              .section-title, .title-text { color: #059669 !important; border-bottom: 1px solid #e2e8f0 !important; padding-bottom: 4px !important; }
+              input, .custom-select-display { background: #f1f5f9 !important; border: 1px solid #94a3b8 !important; color: #000 !important; height: auto !important; min-height: 34px !important; padding: 6px 10px !important; }
+              .custom-select-display span:first-child { white-space: normal !important; overflow: visible !important; text-overflow: unset !important; line-height: 1.35 !important; }
+              .input-group label { color: #000 !important; }
+              .hybrid-hint, .hybrid-hint * { color: #1e293b !important; font-weight: 600 !important; }
+              .hybrid-accordion:not(.has-data), .cables-accordion:not(.has-data), .enterprise-accordion:not(.has-data) { display: none !important; }
+              .hybrid-accordion, .cables-accordion, .enterprise-accordion { border: 1px solid #94a3b8 !important; background: #fff !important; }
+              .hybrid-accordion-body, .cables-accordion-body, .enterprise-accordion-body { max-height: none !important; opacity: 1 !important; padding: 10px !important; }
+              .hybrid-accordion-header, .cables-accordion-header, .enterprise-accordion-header { background: #e2e8f0 !important; color: #000 !important; }
+              .results-container { background: #fff !important; border: 2px solid #059669 !important; }
+              .enterprise-results-card { background: #f0fdf4 !important; border: 1.5px solid #059669 !important; }
+              .enterprise-card-title { color: #059669 !important; }
+              .cables-results-card { background: #fffbeb !important; border: 1.5px solid #d97706 !important; }
+              .result-row, .enterprise-detail-block, .cables-results-card .result-row { background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000 !important; }
+              .result-label, .result-value, .enterprise-detail-label, .enterprise-detail-val, .cables-card-title, .cable-disclaimer { color: #000 !important; }
+              .enterprise-detail-block span, .result-value span { color: #1e293b !important; }
+              .value-emerald, .value-green { color: #047857 !important; }
+              .value-amber { color: #b45309 !important; }
+              .value-blue { color: #1d4ed8 !important; }
+              .stdSize { background: #f8fafc !important; color: #000 !important; border: 1px solid #000 !important; }
+              .engineering-alert { display: block !important; background: #fffbeb !important; border: 1.5px solid #d97706 !important; color: #0f172a !important; box-shadow: none !important; }
+              .engineering-alert span, .engineering-alert div, .engineering-alert p { color: #1e293b !important; }
+              .engineering-alert b, .engineering-alert strong { color: #b45309 !important; }
+              #disclaimerCard { display: block !important; background: #fffbe2 !important; border: 1px solid #d97706 !important; color: #000 !important; }
+              .print-footer-content { display: block !important; text-align: center !important; margin-top: 16px !important; border-top: 1px solid #000 !important; padding-top: 8px !important; color: #000 !important; font-weight: bold !important; }
+            `;
+            const buildClone = () => {
+              const c = document.documentElement.cloneNode(true);
+              const oInp = document.querySelectorAll('input');
+              const cInp = c.querySelectorAll('input');
+              oInp.forEach((inp, idx) => { if (cInp[idx]) cInp[idx].setAttribute('value', inp.value || ''); });
+              c.querySelectorAll('script, link, #splash-screen, #updateModal, #customModal, #smartScrollBtn, img').forEach(el => el.remove());
+              const ch = c.querySelector('.header');
+              if (ch) ch.removeAttribute('style');
+              const st = document.createElement('style');
+              st.textContent = reportCss;
+              c.querySelector('head').appendChild(st);
+              return c;
+            };
+            try {
+              const clone = buildClone();
+              const host = document.createElement('div');
+              host.id = 'pdfMeasureHost';
+              host.style.cssText = 'position:fixed;left:0;top:0;width:794px;background:#fff;z-index:-9999;opacity:0.01;pointer-events:none;overflow:visible;';
+              const mStyle = document.createElement('style');
+              mStyle.textContent = reportCss;
+              host.appendChild(mStyle);
+              Array.from(clone.querySelector('body').children).forEach(ch => host.appendChild(ch.cloneNode(true)));
+              document.body.appendChild(host);
+              const totalH = Math.max(host.scrollHeight, 1123);
+              const pageW = 794, pageH = 1123, marginY = 34, usableH = pageH - marginY * 2;
+              const hostRect = host.getBoundingClientRect();
+              const sel = '.print-only-header, .section-title, .grid-inputs, .hybrid-accordion.has-data, .cables-accordion.has-data, .enterprise-accordion.has-data, .print-devices-table thead, .print-devices-table tbody tr, .result-row, .enterprise-detail-block, .engineering-alert, #disclaimerCard, .print-footer-content';
+              const blocks = Array.from(host.querySelectorAll(sel)).map(el => {
+                const r = el.getBoundingClientRect();
+                return { top: r.top - hostRect.top, bottom: r.bottom - hostRect.top };
+              }).filter(b => b.bottom > b.top);
+              document.body.removeChild(host);
+              const slices = [];
+              let currY = 0;
+              while (currY < totalH - 4) {
+                let cutY = Math.min(currY + usableH, totalH);
+                if (cutY < totalH) {
+                  for (let i = 0; i < blocks.length; i++) {
+                    if (blocks[i].top < cutY && blocks[i].bottom > cutY && blocks[i].top > currY + 90) {
+                      cutY = Math.min(cutY, blocks[i].top - 6);
+                    }
+                  }
+                }
+                slices.push({ y: currY, h: cutY - currY });
+                currY = cutY;
+              }
+              const xhtml = new XMLSerializer().serializeToString(clone);
+              const svgStr = '<svg xmlns="http://www.w3.org/2000/svg" width="' + pageW + '" height="' + totalH + '"><foreignObject width="100%" height="100%">' + xhtml + '</foreignObject></svg>';
+              const svgImg = new Image();
+              await new Promise((res, rej) => {
+                svgImg.onload = res;
+                svgImg.onerror = rej;
+                svgImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+              });
+              const scale = 2;
+              const pageJpegs = slices.map((sl, idx) => {
+                const cv = document.createElement('canvas');
+                cv.width = pageW * scale;
+                cv.height = pageH * scale;
+                const ctx = cv.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, cv.width, cv.height);
+                ctx.drawImage(svgImg, 0, sl.y, pageW, sl.h, 0, marginY * scale, pageW * scale, sl.h * scale);
+                ctx.fillStyle = '#64748b';
+                ctx.font = 'bold 20px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText((idx + 1) + ' / ' + slices.length, cv.width / 2, cv.height - 22);
+                const b64 = cv.toDataURL('image/jpeg', 0.92).split(',')[1];
+                const bin = atob(b64);
+                const u8 = new Uint8Array(bin.length);
+                for (let k = 0; k < bin.length; k++) u8[k] = bin.charCodeAt(k);
+                return { bytes: u8, w: cv.width, h: cv.height };
+              });
+              const enc = new TextEncoder();
+              const chunks = [];
+              let byteLen = 0;
+              const pushStr = s => { const b = enc.encode(s); chunks.push(b); byteLen += b.length; };
+              const pushBytes = b => { chunks.push(b); byteLen += b.length; };
+              const nPages = pageJpegs.length;
+              const totalObjs = 2 + nPages * 3;
+              const offsets = new Array(totalObjs + 1).fill(0);
+              pushStr('%PDF-1.4' + NL);
+              offsets[1] = byteLen;
+              pushStr('1 0 obj' + NL + '<< /Type /Catalog /Pages 2 0 R >>' + NL + 'endobj' + NL);
+              const kids = pageJpegs.map((_, i) => (3 + i * 3) + ' 0 R').join(' ');
+              offsets[2] = byteLen;
+              pushStr('2 0 obj' + NL + '<< /Type /Pages /Kids [ ' + kids + ' ] /Count ' + nPages + ' >>' + NL + 'endobj' + NL);
+              pageJpegs.forEach((pg, i) => {
+                const pId = 3 + i * 3, cId = 4 + i * 3, imId = 5 + i * 3;
+                offsets[pId] = byteLen;
+                pushStr(pId + ' 0 obj' + NL + '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im' + i + ' ' + imId + ' 0 R >> >> /Contents ' + cId + ' 0 R >>' + NL + 'endobj' + NL);
+                const cStream = 'q 595.28 0 0 841.89 0 0 cm /Im' + i + ' Do Q';
+                offsets[cId] = byteLen;
+                pushStr(cId + ' 0 obj' + NL + '<< /Length ' + cStream.length + ' >>' + NL + 'stream' + NL + cStream + NL + 'endstream' + NL + 'endobj' + NL);
+                offsets[imId] = byteLen;
+                pushStr(imId + ' 0 obj' + NL + '<< /Type /XObject /Subtype /Image /Width ' + pg.w + ' /Height ' + pg.h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + pg.bytes.length + ' >>' + NL + 'stream' + NL);
+                pushBytes(pg.bytes);
+                pushStr(NL + 'endstream' + NL + 'endobj' + NL);
+              });
+              const xrefPos = byteLen;
+              pushStr('xref' + NL + '0 ' + (totalObjs + 1) + NL + '0000000000 65535 f ' + NL);
+              for (let id = 1; id <= totalObjs; id++) {
+                pushStr(String(offsets[id]).padStart(10, '0') + ' 00000 n ' + NL);
+              }
+              pushStr('trailer' + NL + '<< /Size ' + (totalObjs + 1) + ' /Root 1 0 R >>' + NL + 'startxref' + NL + xrefPos + NL + '%%EOF');
+              const fullPdf = new Uint8Array(byteLen);
+              let pos = 0;
+              chunks.forEach(c => { fullPdf.set(c, pos); pos += c.length; });
+              let pdfBin = '';
+              for (let i = 0; i < fullPdf.length; i += 8192) {
+                pdfBin += String.fromCharCode.apply(null, fullPdf.subarray(i, i + 8192));
+              }
+              const pdfB64 = btoa(pdfBin);
+              const pdfName = baseName + '_Solar_Report.pdf';
+              const fileRes = await window.Capacitor.Plugins.Filesystem.writeFile({ path: pdfName, data: pdfB64, directory: 'CACHE' });
+              await window.Capacitor.Plugins.Share.share({ title: (cliVal || defaultCli), url: fileRes.uri });
+            } catch (err) {
+              const fbClone = buildClone();
+              const htmlContent = '<!DOCTYPE html>' + fbClone.outerHTML;
+              const safeName = baseName + '_Solar_Report.html';
+              const fileRes = await window.Capacitor.Plugins.Filesystem.writeFile({ path: safeName, data: htmlContent, directory: 'CACHE', encoding: 'utf8' });
+              await window.Capacitor.Plugins.Share.share({ title: (cliVal || defaultCli), url: fileRes.uri });
+            }
+          })();
+        } else { window.print(); }
 
     window.updateVisitorCount = async function() {
         const counterElement = document.getElementById('visitor-count');
